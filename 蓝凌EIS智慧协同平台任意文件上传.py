@@ -118,7 +118,7 @@ def set_cmd_arg() -> any:
     parser.add_argument('-t', '--thread', type=int,
                         required=False, help='Set the number of program threads (setting range from 1 to 50)')
     parser.add_argument('--proxy', type=str, required=False, help='Set up the proxy')
-    parser.add_argument('--file-type', type=str, required=True, default='.asp', help='Upload file type(default is PHP)')
+    parser.add_argument('--file-type', type=str, required=False, default='.asp', help='Upload file type(default is PHP)')
 
     args = parser.parse_args()
     return args
