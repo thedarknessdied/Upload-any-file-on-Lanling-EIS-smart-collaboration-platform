@@ -141,7 +141,7 @@ def parse_param(o: dict) -> (list, str, str):
     global proxies, headers, timeout, delay, thread
 
     def check_proxy(content: str) -> (int, str):
-        mode = re.compile("^(?P<protocol>(http|https|socks4|socks5>))://([A-Za-z0-9]*:[A-Za-z0-9]*@)?([A-Za-z0-9.\-]+)(:[0-9]+)(/[A-Za-z0-9./]*)?", re.I)
+        mode = re.compile("^(?P<protocol>(http|https|socks4|socks5))://([A-Za-z0-9]*:[A-Za-z0-9]*@)?([A-Za-z0-9.\-]+)(:[0-9]+)(/[A-Za-z0-9./]*)?", re.I)
         groups = mode.search(content)
         if groups is None:
             return 500, "Unreasonable proxy settings"
