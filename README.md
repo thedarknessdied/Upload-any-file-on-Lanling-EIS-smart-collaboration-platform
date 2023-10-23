@@ -7,7 +7,7 @@ I have developed a tool for local testing and POC development, which is for tech
 <img width="294" alt="1697677069859" src="https://github.com/thedarknessdied/Upload-any-file-on-Lanling-EIS-smart-collaboration-platform/assets/56123966/7a97ebb9-c935-420b-9fc0-c612d9f02f8e">
 
 ## Description
-NUUO NVR is a network video recorder owned by NUUO Corporation in Taiwan, China, China. The device has a remote command execution vulnerability, which can be used by an attacker to execute arbitrary commands, thereby obtaining the privileges of the server.
+Lanling EIS, a simple and efficient work style, is a mobile office platform specifically designed for growth enterprises for communication, collaboration, and socializing, covering management needs such as OA, communication, customer, personnel, and knowledge
 
 ## installation
 > pip install -r requirements.txt
